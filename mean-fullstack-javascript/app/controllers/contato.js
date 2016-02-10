@@ -5,6 +5,8 @@ module.exports = function(app){
 
 	var controller = {};
 
+	var sanitize = require('mongo-sanitize');
+
 	controller.listaContatos = function(req, res){
 		Contato.find().populate('emergencia').exec()
 		.then(
@@ -33,7 +35,8 @@ module.exports = function(app){
 	};
 
 	controller.removeContato = function(req, res){
-		var _id = req.params.id;
+		//Utilizado o mongo-sanitize para evitar chaves que contem query selectors
+		var _id = sanitize(req.params.id);
 		Contato.remove({"_id":_id}).exec()
 		.then(
 			function(){
@@ -48,11 +51,14 @@ module.exports = function(app){
 	controller.salvaContatos = function(req, res){
 		var _id = req.body._id;
 
-		// testando por undefined
-		req.body.emergencia = req.body.emergencia || null;
+		var dados = {
+			"nome" : req.body.nome,
+			"email" : req.body.email,
+			"emergencia" : req.body.emergencia || null
+		};
 
 		if(_id){
-			Contato.findByIdAndUpdate(_id, req.body).exec()
+			Contato.findByIdAndUpdate(_id, dados).exec()
 			.then(
 				function(contato){
 					res.json(contato);
@@ -63,7 +69,7 @@ module.exports = function(app){
 				}
 			);
 		}else{
-			Contato.create(req.body)
+			Contato.create(dados)
 			.then(
 				function(contato){
 					res.status(201).json(contato);
