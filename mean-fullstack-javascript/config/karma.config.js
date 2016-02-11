@@ -20,7 +20,7 @@ module.exports = function(config) {
         '../public/vendor/angular-resource/angular-resource.js',
         '../public/vendor/angular-route/angular-route.js',
         '../public/js/main.js',
-        '../public/js/controllers/**/**.js',
+        '../public/js/controllers/**/*.js',
         '../public/js/services/**/*.js',
         '../test/spec/**/*Spec.js'
     ],
@@ -68,5 +68,5 @@ module.exports = function(config) {
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false
-  })
-}
+  });
+};
